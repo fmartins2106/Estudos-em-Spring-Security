@@ -29,10 +29,10 @@ public class UsuarioService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("O usuário não foi encontrado!"));
     }
 
-    public Long salvarUsuario(@NotBlank String nome, @NotBlank @Email String email, @NotBlank @Pattern(regexp = "\\d{4,6}", message = "CRM deve ter de 4 a 6 digitos numéricos") String senha) {
+    public Long salvarUsuario(@NotBlank String nome, @NotBlank @Email String email, @NotBlank @Pattern(regexp = "\\d{4,6}", message = "CRM deve ter de 4 a 6 digitos numéricos") String senha, Perfil perfil) {
         String senhaCriptografada = passwordEncoder.encode(senha);
-        Usuario usuario = usuarioRepository.save(new Usuario(nome, email, senhaCriptografada));
-        return usuario.getId();
+        Usuario usuario = usuarioRepository.save(new Usuario(nome, email, senhaCriptografada, perfil));
+       return usuario.getId();
     }
 
     public void excluir(Long id) {

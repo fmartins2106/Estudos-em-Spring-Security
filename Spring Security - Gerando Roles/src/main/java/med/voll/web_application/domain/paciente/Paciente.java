@@ -25,6 +25,11 @@ public class Paciente {
         modificarDados(dados);
     }
 
+    public Paciente(Long id, DadosCadastroPaciente dados) {
+        this.id = id;
+        modificarDados(dados);
+    }
+
     public void modificarDados(DadosCadastroPaciente dados) {
         this.nome = dados.nome();
         this.email = dados.email();
