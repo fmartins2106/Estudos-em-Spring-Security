@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 public class Medico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
@@ -20,6 +19,11 @@ public class Medico {
     public Medico(){}
 
     public Medico(DadosCadastroMedico dados) {
+        atualizarDados(dados);
+    }
+
+    public Medico(Long id, DadosCadastroMedico dados) {
+        this.id = id;
         atualizarDados(dados);
     }
 

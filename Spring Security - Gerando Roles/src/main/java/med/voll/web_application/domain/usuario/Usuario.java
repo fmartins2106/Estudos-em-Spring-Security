@@ -21,6 +21,15 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
 
+    public Usuario() {
+    }
+
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -36,7 +45,15 @@ public class Usuario implements UserDetails {
         return email;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getNome() {
         return nome;
     }
+
+
+
+
 }
