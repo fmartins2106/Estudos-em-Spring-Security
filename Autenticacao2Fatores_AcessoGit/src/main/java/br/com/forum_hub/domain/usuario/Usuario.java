@@ -32,7 +32,6 @@ public class Usuario implements UserDetails {
     public String getPassword() {
         return senha;
     }
-
     @Override
     public String getUsername() {
         return email;
