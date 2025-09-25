@@ -5,6 +5,7 @@ import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -28,10 +29,23 @@ public class TokenService {
         }
     }
 
+    public String verificarToken(String token){
+        try {
+            Algorithm algorithm = Algorithm.HMAC256("123");
+            return JWT.require(algorithm)
+                    .withIssuer("Forum Hub")
+                    .build()
+                    .verify(token)
+                    .getSubject();
+        } catch (JWTVerificationException exception){
+            throw new RegraDeNegocioException("Erro de validação do Token JWT.");
+        }
+    }
+
+
     private Instant tempoExpiracao(Integer minutos) {
         return LocalDateTime.now().plusMinutes(minutos)
                 .toInstant(ZoneOffset.of("-03:00"));
     }
-
 
 }
