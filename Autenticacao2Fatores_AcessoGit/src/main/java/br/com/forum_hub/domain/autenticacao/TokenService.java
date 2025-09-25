@@ -48,4 +48,16 @@ public class TokenService {
                 .toInstant(ZoneOffset.of("-03:00"));
     }
 
+    public String gerarRefreshToken(Usuario usuario) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256("123");
+            return JWT.create()
+                    .withIssuer("Forum Hub")
+                    .withSubject(usuario.getId().toString())
+                    .withExpiresAt(tempoExpiracao(120))
+                    .sign(algorithm);
+        } catch (JWTCreationException exception){
+            throw new RegraDeNegocioException("Erro ao gerar Token JWT.");
+        }
+    }
 }
