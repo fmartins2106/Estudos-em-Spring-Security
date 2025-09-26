@@ -1,5 +1,6 @@
 package br.com.forum_hub.domain.usuario;
 
+import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -86,5 +87,18 @@ public class Usuario implements UserDetails {
 
     public String getMiniBiografia() {
         return miniBiografia;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void verificar() {
+        if (expiracaoToken.isBefore(LocalDateTime.now())){
+            throw new RegraDeNegocioException("Link de verificação expirou.");
+        }
+        this.verificado = true;
+        this.token = null;
+        this.expiracaoToken = null;
     }
 }
