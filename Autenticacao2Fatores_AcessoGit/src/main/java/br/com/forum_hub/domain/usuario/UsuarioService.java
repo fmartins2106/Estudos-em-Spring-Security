@@ -1,5 +1,7 @@
 package br.com.forum_hub.domain.usuario;
 
+import br.com.forum_hub.domain.perfil.PerfilNome;
+import br.com.forum_hub.domain.perfil.PerfilRepository;
 import br.com.forum_hub.infra.email.EmailService;
 import br.com.forum_hub.infra.exception.RegraDeNegocioException;
 import jakarta.transaction.Transactional;
@@ -24,6 +26,9 @@ public class UsuarioService implements UserDetailsService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PerfilRepository perfilRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return usuarioRepository.findByEmailIgnoreCaseAndVerificadoTrue(username)
@@ -44,8 +49,10 @@ public class UsuarioService implements UserDetailsService {
             throw new RegraDeNegocioException("Senha não bate com a confirmação!");
         }
 
+        var perfil = perfilRepository.findByNome(PerfilNome.ESTUDANTE);
+
         var senhaCriptografada = passwordEncoder.encode(dados.senha());
-        var usuario = new Usuario(dados, senhaCriptografada);
+        var usuario = new Usuario(dados, senhaCriptografada, perfil);
         emailService.enviarEmailVerificacao(usuario);
 
         return usuarioRepository.save(usuario);
