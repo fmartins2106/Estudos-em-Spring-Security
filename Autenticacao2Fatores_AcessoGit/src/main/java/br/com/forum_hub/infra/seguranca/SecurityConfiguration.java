@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login","/login/atualizar-token").permitAll();
+                    auth.requestMatchers("/login","/login/atualizar-token", "/registrar").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(filtroTokenAcesso, UsernamePasswordAuthenticationFilter.class)
