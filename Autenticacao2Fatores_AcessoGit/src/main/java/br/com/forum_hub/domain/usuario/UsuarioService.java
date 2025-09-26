@@ -22,14 +22,14 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usuarioRepository.findByEmailIgnoreCase(username)
+        return usuarioRepository.findByEmailIgnoreCaseAndVerificadoTrue(username)
                 .orElseThrow(() -> new RuntimeException("Email não encontrado."));
     }
 
     @Transactional
     public Usuario cadastrar(DadosCadastroUsuario dados) {
 
-        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmailIgnoreCaseOrNomeUsuarioIgnoreCase(dados.email());
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmailIgnoreCaseOrNomeUsuarioIgnoreCase(dados.email(), dados.nomeUsuario());
 
         if(optionalUsuario.isPresent()){
             throw new RegraDeNegocioException("Já existe uma conta cadastrada com esse email ou nome de usuário!");
