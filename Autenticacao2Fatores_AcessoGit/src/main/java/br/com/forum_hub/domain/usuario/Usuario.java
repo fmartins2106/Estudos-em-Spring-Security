@@ -103,6 +103,15 @@ public class Usuario implements UserDetails {
         return token;
     }
 
+
+    public List<Perfil> getPerfis() {
+        return perfis;
+    }
+
+    public void setPerfis(List<Perfil> perfis) {
+        this.perfis = perfis;
+    }
+
     public void verificar() {
         if (expiracaoToken.isBefore(LocalDateTime.now())){
             throw new RegraDeNegocioException("Link de verificação expirou.");
@@ -110,5 +119,13 @@ public class Usuario implements UserDetails {
         this.verificado = true;
         this.token = null;
         this.expiracaoToken = null;
+    }
+
+    public void adicionarPerfil(Perfil perfil) {
+        this.perfis.add(perfil);
+    }
+
+    public void removerPerfil(Perfil perfil) {
+        this.perfis.remove(perfil);
     }
 }

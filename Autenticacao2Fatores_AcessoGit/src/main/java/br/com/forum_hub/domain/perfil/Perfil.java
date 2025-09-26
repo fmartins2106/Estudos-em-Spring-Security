@@ -15,6 +15,20 @@ public class Perfil implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return "ROLE__"+ nome;
+        return "ROLE_"+ nome;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Perfil)) return false;
+        Perfil perfil = (Perfil) o;
+        return id != null && id.equals(perfil.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
 }
