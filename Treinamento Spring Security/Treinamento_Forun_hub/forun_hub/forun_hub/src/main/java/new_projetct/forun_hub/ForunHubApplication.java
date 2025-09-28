@@ -1,4 +1,4 @@
-package projeto_forun_hub.forun_hub;
+package new_projetct.forun_hub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

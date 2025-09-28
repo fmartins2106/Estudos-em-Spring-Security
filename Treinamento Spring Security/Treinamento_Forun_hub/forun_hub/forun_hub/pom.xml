@@ -8,7 +8,7 @@
 		<version>3.5.6</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>projeto_forun_hub</groupId>
+	<groupId>new_projetct</groupId>
 	<artifactId>forun_hub</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>forun_hub</name>
