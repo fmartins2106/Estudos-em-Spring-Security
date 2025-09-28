@@ -23,7 +23,7 @@ public class CursoService {
         if (categoria != null){
             return cursoRepository.findByCategoriaAndAtivoTrue(categoria, paginacao).map(DadosCurso::new);
         }
-        return cursoRepository.findAll(paginacao).map(DadosCurso::new);
+        return cursoRepository.findByAtivoTrue(paginacao).map(DadosCurso::new);
     }
 
     public Curso atualizar(Long id, DadosAtualizacaoCurso dadosAtualizacaoCurso){

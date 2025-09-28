@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CursoRepository extends JpaRepository<Curso, Long> {
 
     Page<Curso> findByCategoriaAndAtivoTrue(Categoria categoria, Pageable paginacao);
+
+    Page<Curso> findByAtivoTrue(Pageable paginacao);
 }
