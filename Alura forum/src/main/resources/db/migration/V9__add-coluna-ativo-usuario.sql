@@ -1,0 +1,1 @@
+ALTER TABLE usuarios add column ativo boolean default true;
