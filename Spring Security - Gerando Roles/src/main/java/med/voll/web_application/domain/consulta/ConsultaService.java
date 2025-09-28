@@ -7,7 +7,6 @@ import med.voll.web_application.domain.paciente.PacienteRepository;
 import med.voll.web_application.domain.usuario.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -40,16 +39,11 @@ public class ConsultaService {
         }
     }
 
-    @PreAuthorize("hasRole('ATENDENTE') or" +
-            "(hasRole('PACIENTE') and @consultaRepository.findById(#id).get().paciente.id == principal.id)")
     public DadosAgendamentoConsulta carregarPorId(Long id) {
         var consulta = repository.findById(id).orElseThrow();
         return new DadosAgendamentoConsulta(consulta.getId(), consulta.getMedico().getId(), consulta.getPaciente().getNome(), consulta.getData(), consulta.getMedico().getEspecialidade());
     }
 
-    @PreAuthorize("hasRole('ATENDENTE') or" +
-            "(hasRole('PACIENTE') and @consultaRepository.findById(#id).get().paciente.id == principal.id) or " +
-            "(hasRole('MEDICO') and #id == principal.id)")
     @Transactional
     public void excluir(Long id) {
         repository.deleteById(id);

@@ -2,9 +2,6 @@ package med.voll.web_application.domain.medico;
 
 import jakarta.transaction.Transactional;
 import med.voll.web_application.domain.RegraDeNegocioException;
-import med.voll.web_application.domain.usuario.Perfil;
-import med.voll.web_application.domain.usuario.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,12 +13,8 @@ public class MedicoService {
 
     private final MedicoRepository repository;
 
-
-    private final UsuarioService usuarioService;
-
-    public MedicoService(MedicoRepository repository, UsuarioService usuarioService) {
+    public MedicoService(MedicoRepository repository) {
         this.repository = repository;
-        this.usuarioService = usuarioService;
     }
 
     public Page<DadosListagemMedico> listar(Pageable paginacao) {
@@ -35,8 +28,7 @@ public class MedicoService {
         }
 
         if (dados.id() == null) {
-            Long id = usuarioService.salvarUsuario(dados.nome(), dados.email(), dados.crm(), Perfil.MEDICO);
-            repository.save(new Medico(id, dados));
+            repository.save(new Medico(dados));
         } else {
             var medico = repository.findById(dados.id()).orElseThrow();
             medico.atualizarDados(dados);
@@ -51,7 +43,6 @@ public class MedicoService {
     @Transactional
     public void excluir(Long id) {
         repository.deleteById(id);
-        usuarioService.excluir(id);
     }
 
     public List<DadosListagemMedico> listarPorEspecialidade(Especialidade especialidade) {
