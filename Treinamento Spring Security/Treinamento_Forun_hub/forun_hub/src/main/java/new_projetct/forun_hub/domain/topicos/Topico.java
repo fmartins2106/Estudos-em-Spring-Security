@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import new_projetct.forun_hub.domain.curso.Categoria;
 import new_projetct.forun_hub.domain.curso.Curso;
-import new_projetct.forun_hub.domain.usuario.Usuario;
 
 import java.time.LocalDateTime;
 

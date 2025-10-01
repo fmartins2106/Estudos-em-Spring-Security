@@ -1,13 +1,11 @@
 package new_projetct.forun_hub.domain.resposta;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import new_projetct.forun_hub.domain.topicos.Topico;
-import new_projetct.forun_hub.domain.usuario.Usuario;
 
 import java.time.LocalDateTime;
 
