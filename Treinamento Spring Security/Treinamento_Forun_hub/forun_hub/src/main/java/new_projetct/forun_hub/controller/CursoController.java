@@ -33,7 +33,6 @@ public class CursoController {
                 pagina.getTotalElements(),
                 pagina.getTotalPages()
         );
-
         return ResponseEntity.ok(dto);
     }
 

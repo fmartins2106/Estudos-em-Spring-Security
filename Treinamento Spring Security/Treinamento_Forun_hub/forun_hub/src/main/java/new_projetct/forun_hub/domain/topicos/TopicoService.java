@@ -20,16 +20,27 @@ public class TopicoService {
 
 
     @Transactional
-    public Page<DadosListagemTopico> listaTopicos(String categoria, Long idCurso, Boolean semResposta, Boolean solucionado, Pageable paginacao){
-        Specification<Topico> specification = Specification.where(TopicoSpecification.estaAberto())
+    public Page<DadosListagemTopico> listaTopicos(
+            String categoria, Long idCurso, Boolean semResposta,
+            Boolean solucionado, Pageable paginacao) {
+
+        Specification<Topico> specification =
+                (root, query,
+                 builder) -> builder.conjunction();
+
+        specification = specification
+                .and(TopicoSpecification.estaAberto())
                 .and(TopicoSpecification.temCategoria(categoria))
                 .and(TopicoSpecification.temIdCurso(idCurso))
                 .and(TopicoSpecification.estaSemResposta(semResposta))
                 .and(TopicoSpecification.estarSolucionado(solucionado));
 
-        Page<Topico> topicos = topicoRepository.findAll(specification, paginacao);
-        return topicos.map(DadosListagemTopico::new));
+        return topicoRepository.findAll(specification, paginacao)
+                .map(DadosListagemTopico::new);
     }
+
+
+
 
     public Topico pesquisaTopicoPorID(Long id){
         return topicoRepository.findById(id)
@@ -37,20 +48,18 @@ public class TopicoService {
     }
 
 
-    public DadosDetalhamentoTopico cadastrarTopico(DadosCadastroTopico dadosCadastroTopico){
+    public Topico cadastrarTopico(DadosCadastroTopico dadosCadastroTopico){
         var curso = cursoService.buscarPeloId(dadosCadastroTopico.cursoID());
         var topico = new Topico(dadosCadastroTopico, curso);
-        topicoRepository.save(topico);
-        return new DadosDetalhamentoTopico(topico);
+        return topicoRepository.save(topico);
     }
 
     @Transactional
-    public DadosDetalhamentoTopico atualizarDadosTopico(Long id ,DadosAtualizacaoTopicos dadosAtualizacaoTopicos){
+    public Topico atualizarDadosTopico(Long id ,DadosAtualizacaoTopicos dadosAtualizacaoTopicos){
         var topico = pesquisaTopicoPorID(id);
         var curso = cursoService.buscarPeloId(dadosAtualizacaoTopicos.cursoID());
         topico.atualizarDadoTopico(dadosAtualizacaoTopicos,curso);
-        topicoRepository.save(topico);
-        return new DadosDetalhamentoTopico(topico);
+        return topicoRepository.save(topico);
     }
 
     @Transactional
