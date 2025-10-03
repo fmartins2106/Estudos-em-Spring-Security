@@ -94,4 +94,22 @@ public class Topico {
             this.curso = curso;
         }
     }
+
+
+    public boolean estaAberto() {
+        this.aberto = true;
+    }
+
+    public void alterarStatus(Status status) {
+        this.status = status;
+    }
+
+    public void encrementarResposta() {
+        this.quantidadeRespostas ++;
+    }
+
+
+    public void decrementeResposta() {
+        this.quantidadeRespostas --;
+    }
 }
