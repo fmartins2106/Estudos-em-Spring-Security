@@ -23,6 +23,8 @@ public class Resposta {
     private String mensagem;
     private LocalDateTime dataCriacao;
     private Boolean solucao;
-    private Topico topico;
+
+
+//    private Topico topico;
 
 }

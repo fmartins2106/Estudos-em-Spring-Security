@@ -1,16 +1,13 @@
 package new_projetct.forun_hub.domain.topicos;
 
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import new_projetct.forun_hub.domain.curso.CursoService;
 import new_projetct.forun_hub.infra.exception.ValidacaoRegraDeNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class TopicoService {
@@ -60,8 +57,7 @@ public class TopicoService {
     @Transactional
     public Topico atualizarDadosTopico(Long id ,DadosAtualizacaoTopicos dadosAtualizacaoTopicos){
         var topico = pesquisaTopicoPorID(id);
-        var curso = cursoService.buscarPeloId(dadosAtualizacaoTopicos.cursoID());
-        topico.atualizarDadoTopico(dadosAtualizacaoTopicos,curso);
+        topico.atualizarDadoTopico(dadosAtualizacaoTopicos);
         return topicoRepository.save(topico);
     }
 
@@ -77,6 +73,7 @@ public class TopicoService {
         var topico = pesquisaTopicoPorID(id);
         if (topico.getStatus() == Status.NAO_RESPONDIDO){
             topicoRepository.deleteById(id);
+            return;
         }
         throw new ValidacaoRegraDeNegocio("Erro. Exclusão de tópico só pode ser excluido se status = NAO_RESPONDIDO");
     }

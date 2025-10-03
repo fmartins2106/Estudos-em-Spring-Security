@@ -1,6 +1,7 @@
 package new_projetct.forun_hub.domain.topicos;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import new_projetct.forun_hub.domain.curso.Categoria;
 import new_projetct.forun_hub.domain.curso.Curso;
+import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
 
@@ -48,6 +50,8 @@ public class Topico {
     private Categoria categoria;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "curso_id")
     private Curso curso;
 
 
@@ -62,19 +66,32 @@ public class Topico {
         this.curso = curso;
     }
 
-    public void atualizarDadoTopico(DadosAtualizacaoTopicos dadosAtualizacaoTopicos, Curso novoCurso) {
+
+    public void atualizarDadoTopico(DadosAtualizacaoTopicos dadosAtualizacaoTopicos) {
         if (dadosAtualizacaoTopicos.titulo() != null){
             this.titulo = dadosAtualizacaoTopicos.titulo();
         }
         if (dadosAtualizacaoTopicos.mensagem() != null){
             this.mensagem = dadosAtualizacaoTopicos.mensagem();
         }
-        if (dadosAtualizacaoTopicos.cursoID() != null ){
-            this.curso = novoCurso;
+        if (dadosAtualizacaoTopicos.curso() != null && dadosAtualizacaoTopicos.curso().getId() != null){
+            this.curso = dadosAtualizacaoTopicos.curso();
         }
     }
 
     public void inativarTopico() {
         this.status = Status.RESOLVIDO;
+    }
+
+    public void atualizarDadoTopico02(DadosAtualizacaoTopicos dadosAtualizacaoTopicos, Curso curso) {
+        if (dadosAtualizacaoTopicos.titulo() != null){
+            this.titulo = dadosAtualizacaoTopicos.titulo();
+        }
+        if (dadosAtualizacaoTopicos.mensagem() != null){
+            this.mensagem = dadosAtualizacaoTopicos.mensagem();
+        }
+        if (dadosAtualizacaoTopicos.curso().getId() != null){
+            this.curso = curso;
+        }
     }
 }

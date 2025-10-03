@@ -1,12 +1,12 @@
 package new_projetct.forun_hub.controller;
 
 import jakarta.validation.Valid;
-import new_projetct.forun_hub.domain.resposta.RespostaService;
 import new_projetct.forun_hub.domain.topicos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,8 +18,7 @@ public class TopicoController {
     @Autowired
     private TopicoService topicoService;
 
-    @Autowired
-    private RespostaService respostaService;
+
 
     @PostMapping
     public ResponseEntity<DadosDetalhamentoTopico> cadastrar(@RequestBody @Valid DadosCadastroTopico dadosCadastroTopico, UriComponentsBuilder uriComponentsBuilder){
@@ -48,7 +47,7 @@ public class TopicoController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<DadosDetalhamentoTopico> buscarTopicoPeloId(@PathVariable Long id, @RequestBody @Valid DadosDetalhamentoTopico dadosDetalhamentoTopico){
+    public ResponseEntity<DadosDetalhamentoTopico> buscarTopicoPeloId(@PathVariable Long id){
         var topico = topicoService.pesquisaTopicoPorID(id);
         return ResponseEntity.ok(new DadosDetalhamentoTopico(topico));
     }
@@ -58,9 +57,13 @@ public class TopicoController {
                                                                        @RequestParam(required = false) String categoria,
                                                                        @RequestParam(required = false, name = "sem-Resposta") Boolean semResposta,
                                                                        @RequestParam(required = false) Boolean solucionados,
-                                                                       @PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao){
+                                                                       @PageableDefault(size = 10, sort = {"dataCriacao"})
+                                                                       Pageable paginacao,
+                                                                       PagedResourcesAssembler<DadosListagemTopico> assembler){
         var pagina = topicoService.listaTopicos(categoria, idCurso, semResposta, solucionados, paginacao);
         return ResponseEntity.ok(pagina);
     }
+
+
 
 }
