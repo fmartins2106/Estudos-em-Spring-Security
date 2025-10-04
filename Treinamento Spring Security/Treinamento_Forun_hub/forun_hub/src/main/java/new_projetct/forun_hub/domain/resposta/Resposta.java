@@ -34,22 +34,19 @@ public class Resposta {
     @JoinColumn(name = "topico_id")
     private Topico topico;
 
-    public Resposta(DadosCadastroResposta dadosCadastroResposta) {
-        this.mensagem = mensagem;
+    public Resposta(DadosCadastroResposta dadosCadastroResposta, Topico topico) {
+        this.mensagem = dadosCadastroResposta.mensagem();
         this.dataCriacao = LocalDateTime.now();
-        this.solucao = solucao;
+        this.solucao = false;
         this.topico = topico;
     }
 
     public void atualizarDadosResposta(DadosAtualizacaoResposta dadosAtualizacaoResposta) {
-        if (dadosAtualizacaoResposta.mensagem() != null){
-            this.mensagem = dadosAtualizacaoResposta.mensagem();
-        }
-        if (dadosAtualizacaoResposta.solucao() != null){
-            this.solucao = dadosAtualizacaoResposta.solucao();
-        }
-        if (dadosAtualizacaoResposta.idTopico() != null && dadosAtualizacaoResposta.idTopico().getId() != null){
-            this.topico = dadosAtualizacaoResposta.idTopico();
-        }
+       this.mensagem = dadosAtualizacaoResposta.mensagem();
+    }
+
+    public Resposta marcarComoSolucao() {
+        this.solucao = true;
+        return this;
     }
 }

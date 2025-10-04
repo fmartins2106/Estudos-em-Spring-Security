@@ -58,8 +58,7 @@ public class TopicoController {
                                                                        @RequestParam(required = false, name = "sem-Resposta") Boolean semResposta,
                                                                        @RequestParam(required = false) Boolean solucionados,
                                                                        @PageableDefault(size = 10, sort = {"dataCriacao"})
-                                                                       Pageable paginacao,
-                                                                       PagedResourcesAssembler<DadosListagemTopico> assembler){
+                                                                       Pageable paginacao){
         var pagina = topicoService.listaTopicos(categoria, idCurso, semResposta, solucionados, paginacao);
         return ResponseEntity.ok(pagina);
     }

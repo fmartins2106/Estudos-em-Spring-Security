@@ -97,7 +97,7 @@ public class Topico {
 
 
     public boolean estaAberto() {
-        this.aberto = true;
+        return this.aberto;
     }
 
     public void alterarStatus(Status status) {
