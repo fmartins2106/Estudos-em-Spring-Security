@@ -39,6 +39,18 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
+    public Usuario pesquisaPorID(Long id){
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Erro. ID não encontrado."));
+    }
+
+    @Transactional
+    public Usuario pesquisaNomeUsuario(String nomeUsuario){
+        return usuarioRepository.findByNomeUsuarioIgnoreSensitiveCaseAndAtivoTrue(nomeUsuario)
+                .orElseThrow(() -> new RuntimeException("Nome de usuário inválido."));
+    }
+
+    @Transactional
     public Usuario cadastrarUsuario(DadosCadastroUsuario dadosCadastroUsuario){
         var senhaCriptografada = passwordEncoder.encode(dadosCadastroUsuario.senha());
         var perfil = perfilRepository.findByNome(PerfilNome.ESTUDANTE);
@@ -72,28 +84,43 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public void desativarCadastro(Long id, Usuario logado){
-        var usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ID usuário não encontrado."));
-        if (hierarquiaService.usuarioNaoTemPermissoes(logado, usuario, "ROLE_ADMINISTRADOR")){
-            throw new AccessDeniedException("Não é possivel realizar essa operação.");
-        }
-        usuario.desativado();
-    }
+    public Usuario adicionarPerfil(Usuario logado, Long id, DadosPerfil dadosPerfil) {
+        var usuario = pesquisaPorID(id);
 
-    @Transactional
-    public Usuario adicionarPerfil(Long id, DadosPerfil dadosPerfil){
-        var usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ID não encontrado."));
+        // Chama o método específico para adicionar perfil → apenas admin
+        if (hierarquiaService.usuarioNaoTemPermissoesAddPerfil(logado, "ROLE_ADMINISTRADOR")) {
+            throw new AccessDeniedException("Erro. Somente administradores podem adicionar perfis.");
+        }
+
         var perfil = perfilRepository.findByNome(dadosPerfil.perfilNome());
         usuario.adicionarPerfil(perfil);
         return usuario;
     }
 
     @Transactional
-    public void reativarUsuario(Long id){
+    public void inativarPerfil(Usuario logado, Long id) {
+        var usuario = pesquisaPorID(id);
+
+        // Chama o método específico para inativar → admin ou próprio usuário
+        if (hierarquiaService.usuarioNaoTemPermissoesInativar(logado, usuario, "ROLE_ADMINISTRADOR")) {
+            throw new AccessDeniedException("Erro. Você não tem permissão para inativar este usuário.");
+        }
+
+        usuario.desativado();
+    }
+
+
+
+    @Transactional
+    public void reativarUsuario(Usuario logado, Long id) {
+        // Busca o usuário a ser reativado
         var usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ID não encontrado."));
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+        // Verifica se o usuário logado é administrador
+        if (hierarquiaService.usuarioNaoTemPermissoesAddPerfil(logado, "ROLE_ADMINISTRADOR")) {
+            throw new AccessDeniedException("Erro. Somente administradores podem reativar usuários.");
+        }
+        // Reativa o usuário
         usuario.reativarUsuario();
     }
 
