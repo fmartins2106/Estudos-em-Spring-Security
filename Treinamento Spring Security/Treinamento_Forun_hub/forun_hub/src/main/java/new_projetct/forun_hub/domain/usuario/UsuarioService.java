@@ -72,7 +72,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public void desativarSenha(Long id, Usuario logado){
+    public void desativarCadastro(Long id, Usuario logado){
         var usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ID usuário não encontrado."));
         if (hierarquiaService.usuarioNaoTemPermissoes(logado, usuario, "ROLE_ADMINISTRADOR")){
