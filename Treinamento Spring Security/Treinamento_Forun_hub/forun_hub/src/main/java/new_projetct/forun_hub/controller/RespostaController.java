@@ -2,8 +2,10 @@ package new_projetct.forun_hub.controller;
 
 import jakarta.validation.Valid;
 import new_projetct.forun_hub.domain.resposta.*;
+import new_projetct.forun_hub.domain.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -16,8 +18,9 @@ public class RespostaController {
 
     @PostMapping
     public ResponseEntity<DadosListagemRespostas> cadastrarResposta(@RequestBody @Valid DadosCadastroResposta dadosCadastroResposta,
-                                                                    UriComponentsBuilder uriComponentsBuilder){
-        var resposta = respostaService.cadastrarResposta(dadosCadastroResposta);
+                                                                    UriComponentsBuilder uriComponentsBuilder,
+                                                                    @AuthenticationPrincipal Usuario autor){
+        var resposta = respostaService.cadastrarResposta(dadosCadastroResposta, autor);
         var uri = uriComponentsBuilder.path("/respostas/{id}").buildAndExpand(resposta.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosListagemRespostas(resposta));
     }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity(name = "Perfil")
-@Table(name = "perfil")
+@Table(name = "perfis")
 public class Perfil implements GrantedAuthority {
     // Implementa GrantedAuthority para que cada perfil do usuário
     // seja reconhecido pelo Spring Security como uma permissãoo válida,

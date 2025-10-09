@@ -2,12 +2,14 @@ package new_projetct.forun_hub.controller;
 
 import jakarta.validation.Valid;
 import new_projetct.forun_hub.domain.topicos.*;
+import new_projetct.forun_hub.domain.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,8 +23,10 @@ public class TopicoController {
 
 
     @PostMapping
-    public ResponseEntity<DadosDetalhamentoTopico> cadastrar(@RequestBody @Valid DadosCadastroTopico dadosCadastroTopico, UriComponentsBuilder uriComponentsBuilder){
-        var topico = topicoService.cadastrarTopico(dadosCadastroTopico);
+    public ResponseEntity<DadosDetalhamentoTopico> cadastrar(@RequestBody @Valid DadosCadastroTopico dadosCadastroTopico,
+                                                             UriComponentsBuilder uriComponentsBuilder,
+                                                             @AuthenticationPrincipal Usuario autor){
+        var topico = topicoService.cadastrarTopico(dadosCadastroTopico, autor);
         var uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoTopico(topico));
     }

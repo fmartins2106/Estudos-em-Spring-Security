@@ -27,9 +27,13 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "nome_completo")
     private String nomeCompleto;
     private String email;
     private String senha;
+
+    @Column(name = "nome_usuario")
     private String nomeUsuario;
     private String biografia;
     private String miniBiografia;
@@ -43,7 +47,7 @@ public class Usuario implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     // Define a tabela intermediária que vai armazenar o relacionamento entre usuários e perfis.
     // Nome da tabela no banco: "usuario_perfils"
-    @JoinTable(name = "usuario_perfils",// Define a coluna que referencia a entidade Usuario na tabela intermediária
+    @JoinTable(name = "usuarios_perfis",// Define a coluna que referencia a entidade Usuario na tabela intermediária
             joinColumns = @JoinColumn(name = "usuario_id"),// Define a coluna que referencia a entidade Perfil na tabela intermediária
             inverseJoinColumns = @JoinColumn(name = "perfil_id"))
 // Cria a lista que vai armazenar os perfis associados ao usuário
@@ -54,6 +58,7 @@ public class Usuario implements UserDetails {
     public Usuario(DadosCadastroUsuario dadosCadastroUsuario, String senhaCriptografada, Perfil perfil) {
         this.nomeCompleto = dadosCadastroUsuario.nomeCompleto();
         this.email = dadosCadastroUsuario.email();
+        this.senha = senhaCriptografada;
         this.nomeUsuario = dadosCadastroUsuario.nomeUsuario();
         this.biografia = dadosCadastroUsuario.biografia();
         this.miniBiografia = dadosCadastroUsuario.miniBiografia();

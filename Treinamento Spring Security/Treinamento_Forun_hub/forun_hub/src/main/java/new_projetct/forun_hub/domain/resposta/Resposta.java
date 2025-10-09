@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import new_projetct.forun_hub.domain.topicos.Topico;
+import new_projetct.forun_hub.domain.usuario.Usuario;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,10 @@ public class Resposta {
     @NotNull
     private LocalDateTime dataCriacao;
 
+    @ManyToOne(fetch = FetchType.LAZY) // <- adiciona isso!
+    @JoinColumn(name = "autor_id", nullable = false) // <- cria chave estrangeira no banco
+    private Usuario id_autor;
+
     @NotNull
     private Boolean solucao;
 
@@ -34,11 +39,12 @@ public class Resposta {
     @JoinColumn(name = "topico_id")
     private Topico topico;
 
-    public Resposta(DadosCadastroResposta dadosCadastroResposta, Topico topico) {
+    public Resposta(DadosCadastroResposta dadosCadastroResposta, Topico topico, Usuario autor) {
         this.mensagem = dadosCadastroResposta.mensagem();
         this.dataCriacao = LocalDateTime.now();
         this.solucao = false;
         this.topico = topico;
+        this.id_autor = autor;
     }
 
     public void atualizarDadosResposta(DadosAtualizacaoResposta dadosAtualizacaoResposta) {

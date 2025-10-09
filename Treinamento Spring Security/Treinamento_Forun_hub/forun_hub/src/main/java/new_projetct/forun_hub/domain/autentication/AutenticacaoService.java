@@ -1,6 +1,6 @@
 package new_projetct.forun_hub.domain.autentication;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
+import jakarta.transaction.Transactional;
 import new_projetct.forun_hub.domain.usuario.Usuario;
 import new_projetct.forun_hub.domain.usuario.UsuarioRepository;
 import new_projetct.forun_hub.infra.security.TokenService;
@@ -23,6 +23,7 @@ public class AutenticacaoService {
     private UsuarioRepository usuarioRepository;
 
 
+    @Transactional
     public DadosTokenJWT autenticar(DadosLogin dadosLogin){
         var authenticationToken = new UsernamePasswordAuthenticationToken(dadosLogin.email(), dadosLogin.senha());
         var authentication = authenticationManager.authenticate(authenticationToken);
@@ -39,7 +40,7 @@ public class AutenticacaoService {
         var userName = tokenService.getSubject(refreshToken);
         // Busca o usuário no banco de dados pelo ID extraído do token
         // Caso o usuário não exista, lança uma exceção UsernameNotFoundException
-        var usuario = usuarioRepository.findByLogin(userName)
+        var usuario = usuarioRepository.findByEmail(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado."));
         // Gera um novo token de acesso (access token) para o usuário
         var acessoToken = tokenService.gerarToken(usuario);

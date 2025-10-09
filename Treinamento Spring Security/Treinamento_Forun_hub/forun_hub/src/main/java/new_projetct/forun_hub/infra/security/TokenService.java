@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 @Service
 public class TokenService {
 
-    @Value("${api.token.autentication.secret}")
+    @Value("${spring.api.token.authentication.secret}")
     private String secret;
 
     public String gerarToken(Usuario usuario){
@@ -24,7 +24,7 @@ public class TokenService {
             var algoritimo = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("API FORUM_HUB")
-                    .withSubject(usuario.getUsername())
+                    .withSubject(usuario.getEmail())
                     .withExpiresAt(tempoExpiracao(120))
                     .sign(algoritimo);
         }catch (JWTCreationException exception){

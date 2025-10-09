@@ -34,7 +34,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return usuarioRepository.findByLogin(username)
+        return usuarioRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Erro. Login não encontrado."));
     }
 
@@ -46,7 +46,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public Usuario pesquisaNomeUsuario(String nomeUsuario){
-        return usuarioRepository.findByNomeUsuarioIgnoreSensitiveCaseAndAtivoTrue(nomeUsuario)
+        return usuarioRepository.findByNomeUsuarioIgnoreCaseAndAtivoTrue(nomeUsuario)
                 .orElseThrow(() -> new RuntimeException("Nome de usuário inválido."));
     }
 

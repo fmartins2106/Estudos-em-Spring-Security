@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import new_projetct.forun_hub.domain.topicos.Status;
 import new_projetct.forun_hub.domain.topicos.Topico;
 import new_projetct.forun_hub.domain.topicos.TopicoService;
+import new_projetct.forun_hub.domain.usuario.Usuario;
 import new_projetct.forun_hub.infra.exception.ValidacaoRegraDeNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class RespostaService {
     private TopicoService topicoService;
 
     @Transactional
-    public Resposta cadastrarResposta(DadosCadastroResposta dadosCadastroResposta){
+    public Resposta cadastrarResposta(DadosCadastroResposta dadosCadastroResposta, Usuario autor){
         var topico = topicoService.pesquisaTopicoPorID(dadosCadastroResposta.idTopico());
         if (!topico.estaAberto()){
             throw new ValidacaoRegraDeNegocio("Resposta não pode ser mais inserida no tópico. Tópico solucionado.");
@@ -27,7 +28,7 @@ public class RespostaService {
             topico.alterarStatus(Status.RESPONDIDO);
         }
         topico.encrementarResposta();
-        var resposta = new Resposta(dadosCadastroResposta, topico);
+        var resposta = new Resposta(dadosCadastroResposta, topico, autor);
         respostaRepository.save(resposta);
         return resposta;
     }

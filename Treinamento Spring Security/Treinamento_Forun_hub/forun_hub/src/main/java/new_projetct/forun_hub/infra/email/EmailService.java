@@ -21,13 +21,13 @@ public class EmailService {
     private JavaMailSender enviadorEmail;
 
     // Constantes para padronizar origem e remetente dos e-mails
-    @Value("${email.origem}")
+    @Value("${spring.mail.origem}")
     private String emailOrigem;
 
-    @Value("${email.nomeRemetente}")
+    @Value("${spring.mail.nomeRemetente}")
     private String nomeRemetente;
 
-    @Value("${app.urlSite}")
+    @Value("${spring.app.urlSite}")
     private String urlSite;
 
 

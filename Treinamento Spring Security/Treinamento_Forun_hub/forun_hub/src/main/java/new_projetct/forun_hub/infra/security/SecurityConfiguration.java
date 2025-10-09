@@ -3,6 +3,8 @@ package new_projetct.forun_hub.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,8 +28,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login").permitAll();
-                    auth.requestMatchers("/usuarios").permitAll();
+                    auth.requestMatchers("/login", "/atualizar-token", "/registrar", "verificar-conta").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
@@ -41,6 +42,15 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public RoleHierarchy hierarquiaPerfis(){
+        String hierarquia = "ROLE_ADMIN > ROLE_MODERADOR\n"+
+                "ROLE_MODERADOR > ROLE_INSTRUTOR\n"+
+                "ROLE_MODERADOR > ROLE_ESTUDANTE";
+        return RoleHierarchyImpl.fromHierarchy(hierarquia);
     }
 
 

@@ -2,6 +2,7 @@ package new_projetct.forun_hub.domain.topicos;
 
 import jakarta.transaction.Transactional;
 import new_projetct.forun_hub.domain.curso.CursoService;
+import new_projetct.forun_hub.domain.usuario.Usuario;
 import new_projetct.forun_hub.infra.exception.ValidacaoRegraDeNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,9 +49,9 @@ public class TopicoService {
     }
 
 
-    public Topico cadastrarTopico(DadosCadastroTopico dadosCadastroTopico){
+    public Topico cadastrarTopico(DadosCadastroTopico dadosCadastroTopico, Usuario autor){
         var curso = cursoService.buscarPeloId(dadosCadastroTopico.cursoID());
-        var topico = new Topico(dadosCadastroTopico, curso);
+        var topico = new Topico(dadosCadastroTopico, curso, autor);
         return topicoRepository.save(topico);
     }
 

@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import new_projetct.forun_hub.domain.curso.Categoria;
 import new_projetct.forun_hub.domain.curso.Curso;
+import new_projetct.forun_hub.domain.usuario.Usuario;
 import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,10 @@ public class Topico {
     @NotNull
     private Boolean aberto;
 
+    @ManyToOne(fetch = FetchType.LAZY) // <- adiciona isso!
+    @JoinColumn(name = "autor_id", nullable = false) // <- cria chave estrangeira no banco
+    private Usuario autor_id;
+
     @NotNull
     private Integer quantidadeRespostas;
 
@@ -55,12 +60,13 @@ public class Topico {
     private Curso curso;
 
 
-    public Topico(DadosCadastroTopico dadosCadastroTopico, Curso curso) {
+    public Topico(DadosCadastroTopico dadosCadastroTopico, Curso curso, Usuario autor) {
         this.titulo = dadosCadastroTopico.titulo();
         this.mensagem = dadosCadastroTopico.mensagem();
         this.dataCriacao = LocalDateTime.now();
         this.status = Status.NAO_RESPONDIDO;
         this.aberto = true;
+        this.autor_id = autor;
         this.quantidadeRespostas = 0;
         this.categoria = curso.getCategoria();
         this.curso = curso;
