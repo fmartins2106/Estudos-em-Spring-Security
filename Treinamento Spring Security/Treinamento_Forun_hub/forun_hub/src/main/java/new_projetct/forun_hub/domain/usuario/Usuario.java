@@ -6,9 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import new_projetct.forun_hub.domain.perfil.Perfil;
-import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
@@ -87,17 +85,18 @@ public class Usuario implements UserDetails {
 
     public void verificadoTrue() {
         this.verificado = true;
+        this.ativo = true;
     }
 
-    public Usuario alterarDados(DadosEdiacaoUsuario dadosEdiacaoUsuario) {
-        if (dadosEdiacaoUsuario.nomeUsuario() != null){
-            this.nomeUsuario = dadosEdiacaoUsuario.nomeUsuario();
+    public Usuario alterarDados(DadosEdicaoUsuario dadosEdicaoUsuario) {
+        if (dadosEdicaoUsuario.nomeUsuario() != null){
+            this.nomeUsuario = dadosEdicaoUsuario.nomeUsuario();
         }
-        if (dadosEdiacaoUsuario.biografia() != null){
-            this.biografia = dadosEdiacaoUsuario.biografia();
+        if (dadosEdicaoUsuario.biografia() != null){
+            this.biografia = dadosEdicaoUsuario.biografia();
         }
-        if (dadosEdiacaoUsuario.miniBiografia() != null){
-            this.miniBiografia = dadosEdiacaoUsuario.miniBiografia();
+        if (dadosEdicaoUsuario.miniBiografia() != null){
+            this.miniBiografia = dadosEdicaoUsuario.miniBiografia();
         }
         return this;
     }

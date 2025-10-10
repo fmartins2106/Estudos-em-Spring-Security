@@ -7,7 +7,7 @@ public record DadosAlteracaoSenha(
         @NotBlank(message = "Erro. Digite sua senha atual.")
         String senhaAtual,
         @NotBlank(message = "Erro. Digite uma senha.")
-        @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\\[\\]:;\"'<>,.?/~`\\\\|-]).{8,}$\n",
+        @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\\[\\]:;\"'<>,.?/~`\\\\|-]).{8,}$",
                 message = "Senha precisa contar uma letra maiuscula, um caracter e pelo menos 8 digitos.")
         String senha,
 

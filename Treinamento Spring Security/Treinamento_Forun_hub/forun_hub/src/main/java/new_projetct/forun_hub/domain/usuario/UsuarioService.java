@@ -55,8 +55,9 @@ public class UsuarioService implements UserDetailsService {
         var senhaCriptografada = passwordEncoder.encode(dadosCadastroUsuario.senha());
         var perfil = perfilRepository.findByNome(PerfilNome.ESTUDANTE);
         var usuario = new Usuario(dadosCadastroUsuario, senhaCriptografada, perfil);
+        usuarioRepository.save(usuario);
         emailService.enviarEmailVerificacao(usuario);
-        return usuarioRepository.save(usuario);
+        return usuario;
     }
 
     @Transactional
@@ -67,8 +68,9 @@ public class UsuarioService implements UserDetailsService {
     }
 
     @Transactional
-    public Usuario editarDadosUsuario(Usuario usuario, DadosEdiacaoUsuario dadosEdiacaoUsuario){
-        return usuario.alterarDados(dadosEdiacaoUsuario);
+    public Usuario editarDadosUsuario(Usuario usuario, DadosEdicaoUsuario dadosEdicaoUsuario){
+        usuario.alterarDados(dadosEdicaoUsuario);
+        return usuarioRepository.save(usuario);
     }
 
     @Transactional
@@ -76,11 +78,12 @@ public class UsuarioService implements UserDetailsService {
         if (!passwordEncoder.matches(dadosAlteracaoSenha.senhaAtual(), usuario.getPassword())){
             throw new ValidacaoRegraDeNegocio("Senha digitada não confere com senha Atual.");
         }
-        if (!dadosAlteracaoSenha.confirmacaoNovaSenha().equals(dadosAlteracaoSenha.confirmacaoNovaSenha())){
+        if (!dadosAlteracaoSenha.senha().equals(dadosAlteracaoSenha.confirmacaoNovaSenha())){
             throw new ValidacaoRegraDeNegocio("Senha e confirmação não conferem.");
         }
         String senhaCriptografada = passwordEncoder.encode(dadosAlteracaoSenha.senha());
         usuario.alterarSenha(senhaCriptografada);
+        usuarioRepository.save(usuario);
     }
 
     @Transactional

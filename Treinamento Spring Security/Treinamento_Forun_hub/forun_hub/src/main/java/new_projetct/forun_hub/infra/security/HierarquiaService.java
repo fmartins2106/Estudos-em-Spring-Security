@@ -22,16 +22,21 @@ public class HierarquiaService {
     public boolean usuarioNaoTemPermissoesAddPerfil(Usuario logado, String perfilDesejado) {
         return logado.getAuthorities().stream()
                 // Para cada autoridade, pega as autoridades alcançáveis
-                .flatMap(autoridade -> roleHierarchy.getReachableGrantedAuthorities(List.of(autoridade)).stream())
+                .flatMap(autoridade ->
+                        roleHierarchy.getReachableGrantedAuthorities(List.of(autoridade)).stream())
                 // Verifica se alguma delas é o perfil desejado
-                .noneMatch(perfil -> perfil.getAuthority().equals(perfilDesejado));
+                .noneMatch(perfil ->
+                        perfil.getAuthority().equals(perfilDesejado));
     }
 
     // Para inativar conta → admin ou próprio usuário
     public boolean usuarioNaoTemPermissoesInativar(Usuario logado, Usuario autor, String perfilDesejado) {
         return logado.getAuthorities().stream()
-                .flatMap(autoridade -> roleHierarchy.getReachableGrantedAuthorities(List.of(autoridade)).stream())
+                .flatMap(autoridade ->
+                        roleHierarchy.getReachableGrantedAuthorities(List.of(autoridade))
+                                .stream())
                 // Verifica se alguma autoridade bate com o perfil desejado ou se é o próprio usuário
-                .noneMatch(perfil -> perfil.getAuthority().equals(perfilDesejado) || logado.getId().equals(autor.getId()));
+                .noneMatch(perfil ->
+                        perfil.getAuthority().equals(perfilDesejado) || logado.getId().equals(autor.getId()));
     }
 }

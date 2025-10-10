@@ -46,13 +46,11 @@ public class SecurityConfiguration {
 
 
     @Bean
-    public RoleHierarchy hierarquiaPerfis(){
-        String hierarquia = "ROLE_ADMIN > ROLE_MODERADOR\n"+
-                "ROLE_MODERADOR > ROLE_INSTRUTOR\n"+
-                "ROLE_MODERADOR > ROLE_ESTUDANTE";
+    public RoleHierarchy roleHierarchy(){
+        String hierarquia = "ROLE_ADMINISTRADOR > ROLE_MODERADOR\n" +
+                "ROLE_MODERADOR > ROLE_INSTRUTOR\n" +
+                "ROLE_INSTRUTOR > ROLE_ESTUDANTE";
         return RoleHierarchyImpl.fromHierarchy(hierarquia);
     }
-
-
 
 }
