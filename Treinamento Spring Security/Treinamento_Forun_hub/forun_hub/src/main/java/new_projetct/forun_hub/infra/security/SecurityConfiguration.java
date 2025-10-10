@@ -3,6 +3,7 @@ package new_projetct.forun_hub.infra.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +29,31 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login", "/atualizar-token", "/registrar", "verificar-conta").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/login", "/atualizar-token", "/registrar", "/verificar-conta").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/verificar-conta").permitAll();
+                    auth.requestMatchers(HttpMethod.GET,"/curso**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/curso").hasAnyRole("ADMINISTRADOR");
+                    auth.requestMatchers(HttpMethod.PUT, "/curso").hasAnyRole("ADMINISTRADOR");
+
+                    auth.requestMatchers(HttpMethod.GET,"/topicos/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/topicos").hasRole("ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.PUT, "/topicos").hasAnyRole("MODERADOR, INSTRUTOR");
+                    auth.requestMatchers(HttpMethod.DELETE, "/topicos**").hasRole("ESTUDANTE");
+
+                    auth.requestMatchers(HttpMethod.GET, "/respostas").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/repostas").hasRole("ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.PUT, "/repostas").hasRole("ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.PATCH, "/repostas**").hasRole("ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.DELETE, "/repostas**").hasRole("ESTUDANTE");
+
+                    auth.requestMatchers(HttpMethod.POST, "/registrar").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/{nomeUsuario}").hasAuthority("ADMINISTRADOR");
+                    auth.requestMatchers(HttpMethod.PATCH, "/editar-perfil").hasRole("ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.PATCH, "/alterar-senha").hasRole("ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.PATCH, "/desativar/{id}").hasAnyRole("ADMINISTRADOR", "ESTUDANTE");
+                    auth.requestMatchers(HttpMethod.PATCH, "/reativar-conta/{id}").hasRole("ADMINISTRADOR");
+                    auth.requestMatchers(HttpMethod.PATCH, "/adicionar-perfil/{id}").hasRole("ADMINISTRADOR");
+
                     auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class).build();
@@ -52,5 +77,7 @@ public class SecurityConfiguration {
                 "ROLE_INSTRUTOR > ROLE_ESTUDANTE";
         return RoleHierarchyImpl.fromHierarchy(hierarquia);
     }
+
+
 
 }
