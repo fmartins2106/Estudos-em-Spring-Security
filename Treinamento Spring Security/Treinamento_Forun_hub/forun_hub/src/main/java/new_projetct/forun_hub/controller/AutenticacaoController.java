@@ -1,5 +1,6 @@
 package new_projetct.forun_hub.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import new_projetct.forun_hub.domain.autentication.*;
 import new_projetct.forun_hub.domain.usuario.UsuarioRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login")
+@SecurityRequirement(name = "bearer-key")
 public class AutenticacaoController {
 
     @Autowired

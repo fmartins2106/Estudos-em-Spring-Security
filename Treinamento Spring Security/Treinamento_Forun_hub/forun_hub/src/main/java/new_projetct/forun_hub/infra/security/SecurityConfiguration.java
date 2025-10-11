@@ -52,7 +52,9 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.PATCH, "/alterar-senha").hasRole("ESTUDANTE");
                     auth.requestMatchers(HttpMethod.PATCH, "/desativar/{id}").hasAnyRole("ADMINISTRADOR", "ESTUDANTE");
                     auth.requestMatchers(HttpMethod.PATCH, "/reativar-conta/{id}").hasRole("ADMINISTRADOR");
-                    auth.requestMatchers(HttpMethod.PATCH, "/adicionar-perfil/{id}").hasRole("ADMINISTRADOR");
+                    auth.requestMatchers(HttpMethod.PATCH, "/adicionar-perfil/{id}").hasRole("ADMINISTRADOR")
+                    auth.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/swagger-resources/**",
+                            "/webjars/**").permitAll();
 
                     auth.anyRequest().authenticated();
                 })

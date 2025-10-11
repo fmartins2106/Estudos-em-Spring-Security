@@ -1,5 +1,6 @@
 package new_projetct.forun_hub.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import new_projetct.forun_hub.domain.topicos.*;
 import new_projetct.forun_hub.domain.usuario.Usuario;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("topicos")
+@SecurityRequirement(name = "bearer-key")
 public class TopicoController {
 
     @Autowired
