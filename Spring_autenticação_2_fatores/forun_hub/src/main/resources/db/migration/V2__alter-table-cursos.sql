@@ -1,0 +1,1 @@
+ALTER TABLE cursos add column categoria ENUM('PROGRAMACAO', 'IA', 'FRONTEND', 'DADOS', 'INOVACAO', 'MARKETING', 'DESIGN') NOT NULL;
