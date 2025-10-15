@@ -1,13 +1,11 @@
 package new_projetct.forun_hub.domain.autentication.github;
 
-import org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
@@ -17,7 +15,7 @@ public class LoginGitHubService {
     private static final String REDIRECT_URI = "http://localhost:8080/login/github/autorizado";
     private static final String CLIENT_SECRET = "208918dbc28947c66ff9f87ade29038ca4e55942";
 
-    private static final String SCOPE = "read:user%20user:email"; // <- corrigido
+    private static final String SCOPE = "read:user,user:email"; // <- corrigido
 
     private final RestClient restClient;
 
@@ -26,23 +24,28 @@ public class LoginGitHubService {
     }
 
     public String gerarUrl() {
+        String encodedRedirect = URLEncoder.encode(REDIRECT_URI, StandardCharsets.UTF_8);
+        String encodedScope = URLEncoder.encode(SCOPE, StandardCharsets.UTF_8);
+
         return "https://github.com/login/oauth/authorize"
                 + "?client_id=" + CLIENT_ID
-                + "&redirect_uri=" + REDIRECT_URI
-                + "&scope=" + SCOPE;
+                + "&redirect_uri=" + encodedRedirect
+                + "&scope=" + encodedScope;
     }
 
 
     public String obterToken(String code) {
         var resposta = restClient.post()
-                .uri("http://localhost:8080/login/oauth/access_token")
-                .contentType(MediaType.APPLICATION_JSON)
+                .uri("https://github.com/login/oauth/access_token")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Map.of("code", code, "CLIENT_ID", CLIENT_ID,
-                        "CLIENT_SECRET",CLIENT_SECRET,
-                        "REDIRECT_URI", REDIRECT_URI))
+                .body("client_id=" + CLIENT_ID
+                        + "&client_secret=" + CLIENT_SECRET
+                        + "&code=" + code
+                        + "&redirect_uri=" + REDIRECT_URI)
                 .retrieve()
                 .body(String.class);
         return resposta;
     }
+
 }
