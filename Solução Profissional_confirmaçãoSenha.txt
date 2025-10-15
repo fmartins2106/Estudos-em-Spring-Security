@@ -1,0 +1,68 @@
+✅ Solução Profissional (com @PasswordMatches)
+1. Crie a anotação personalizada
+package new_projetct.forun_hub.infra.validacao;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+import java.lang.annotation.*;
+
+@Documented
+@Constraint(validatedBy = PasswordMatchesValidator.class)
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PasswordMatches {
+
+    String message() default "A confirmação da senha deve ser igual à nova senha.";
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+}
+
+
+2. Crie o validador
+
+package new_projetct.forun_hub.infra.validacao;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+import new_projetct.forun_hub.domain.usuario.dto.DadosAlteracaoSenha;
+
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, DadosAlteracaoSenha> {
+
+    @Override
+    public boolean isValid(DadosAlteracaoSenha dados, ConstraintValidatorContext context) {
+        if (dados == null) return true;
+        return dados.senha().equals(dados.confirmacaoNovaSenha());
+    }
+}
+
+
+3. Use a anotação no seu record
+
+
+package new_projetct.forun_hub.domain.usuario.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import new_projetct.forun_hub.infra.validacao.PasswordMatches;
+
+@PasswordMatches
+public record DadosAlteracaoSenha(
+        @NotBlank(message = "Erro. Digite sua senha atual.")
+        String senhaAtual,
+
+        @NotBlank(message = "Erro. Digite uma senha.")
+        @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\\[\\]:;\"'<>,.?/~`\\\\|-]).{8,}$",
+            message = "Senha precisa conter uma letra maiúscula, um caractere especial e pelo menos 8 dígitos."
+        )
+        String senha,
+
+        @NotBlank(message = "Digite novamente a senha.")
+        String confirmacaoNovaSenha
+) {}
+
+
+
+

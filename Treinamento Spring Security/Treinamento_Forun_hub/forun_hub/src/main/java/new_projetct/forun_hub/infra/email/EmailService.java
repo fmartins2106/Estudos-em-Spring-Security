@@ -61,7 +61,7 @@ public class EmailService {
                         "Por favor clieque no link abaixo para verificar seu conta <br>" +
                         "<h3> <a href=\"[[URL]]\" target=\"_self\">VERIFICAR</a></h3>" +
                         "Obrigado <br>" +
-                        "Forun Hub :).",
+                        "Clínica Med VOll :).",
                 usuario.getNomeCompleto(),
                 urlSite + "/verificar-conta?codigo="+usuario.getToken()
         );

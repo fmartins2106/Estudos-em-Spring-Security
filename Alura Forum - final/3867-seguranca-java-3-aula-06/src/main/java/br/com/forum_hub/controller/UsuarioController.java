@@ -27,6 +27,7 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {
+
         this.usuarioService = usuarioService;
     }
 
@@ -50,7 +51,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/editar-perfil")
-    public ResponseEntity<DadosListagemUsuario> editarPerfil(@RequestBody @Valid DadosEdicaoUsuario dados, @AuthenticationPrincipal Usuario logado){
+    public ResponseEntity<DadosListagemUsuario> editarPerfil(@RequestBody @Valid DadosEdicaoUsuario dados,
+                                                             @AuthenticationPrincipal Usuario logado){
         var usuario = usuarioService.editarPerfil(logado, dados);
         return ResponseEntity.ok(new DadosListagemUsuario(usuario));
     }
@@ -61,7 +63,7 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/desativar")
+    @DeleteMapping("/desativar/{id}")
     public ResponseEntity<Void> desativarUsuario(@PathVariable Long id, @AuthenticationPrincipal Usuario logado){
         usuarioService.desativarUsuario(id, logado);
         return ResponseEntity.noContent().build();
@@ -79,3 +81,33 @@ public class UsuarioController {
         return ResponseEntity.ok(new DadosListagemUsuario(usuario));
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

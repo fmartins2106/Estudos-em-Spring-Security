@@ -26,4 +26,35 @@ public class CursoService {
         return repository.findAll(paginacao).map(DadosCurso::new);
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

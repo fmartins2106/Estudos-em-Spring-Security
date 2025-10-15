@@ -61,6 +61,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Transactional
     public Usuario editarPerfil(Usuario usuario, DadosEdicaoUsuario dados) {
+
         return usuario.alterarDados(dados);
     }
 
@@ -101,4 +102,41 @@ public class UsuarioService implements UserDetailsService {
         var usuario = usuarioRepository.findById(id).orElseThrow();
         usuario.reativar();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

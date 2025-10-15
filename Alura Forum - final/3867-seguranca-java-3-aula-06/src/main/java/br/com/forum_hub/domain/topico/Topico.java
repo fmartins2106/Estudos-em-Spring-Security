@@ -23,6 +23,7 @@ public class Topico {
     private Long id;
     private String titulo;
     private String mensagem;
+
     @ManyToOne
     @JoinColumn(name="autor_id")
     private Usuario autor;

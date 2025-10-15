@@ -1,0 +1,147 @@
+Tutorial: Docker Compose + Spring Boot + PostgreSQL
+
+---
+
+## Estrutura do Projeto
+
+```
+meu-projeto/
+├── Dockerfile
+├── docker-compose.yml
+├── target/medvoll.jar
+└── ... (código fonte, pom.xml, etc)
+```
+
+O `.env` ficará fora do projeto no servidor:
+
+```
+/opt/configs/medvoll/.env
+```
+
+---
+
+## Exemplo de `.env` externo
+
+```env
+# Banco
+POSTGRES_DB=medvoll_db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=123456
+
+# Spring Boot
+SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/medvoll_db
+SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_PASSWORD=123456
+SPRING_PROFILES_ACTIVE=docker
+
+# E-mail
+EMAIL_ORIGEM=fernandom.adm@gmail.com
+EMAIL_NOME_REMETENTE=Forun_Hub
+EMAIL_USERNAME=fernandom.adm@gmail.com
+EMAIL_PASSWORD=rldpuxpkhirlroir
+
+# Secret
+SECRET=masterToken10102025
+```
+
+---
+
+## Dockerfile do Backend
+
+```dockerfile
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY target/medvoll.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
+```
+
+---
+
+## Docker Compose usando `.env` externo
+
+```yaml
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: medvoll-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - EMAIL_ORIGEM=${EMAIL_ORIGEM}
+      - EMAIL_NOME_REMETENTE=${EMAIL_NOME_REMETENTE}
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - APP_URL_SITE=${APP_URL_SITE}
+      - SECRET=${SECRET}
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: postgres:16
+    container_name: medvoll-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+---
+
+## Rodando a aplicação
+
+```bash
+docker compose --env-file /opt/configs/medvoll/.env up -d --build
+```
+
+* Dois containers serão criados: backend + PostgreSQL
+* Backend já conectado ao banco
+* Variáveis de ambiente carregadas automaticamente
+* Dados do banco persistentes graças ao volume `postgres_data`
+
+---
+
+## Comandos úteis
+
+* Ver logs do backend:
+
+```bash
+docker compose logs -f app
+```
+
+* Parar containers:
+
+```bash
+docker compose down
+```
+
+* Reconstruir imagem se mudar o jar:
+
+```bash
+docker compose up -d --build
+```
+
+---
+
+## Dicas Profissionais
+
+* Nunca comitar `.env` com senhas no Git
+* Criar um `.env.example` para documentar as variáveis necessárias
+* Usar volumes para persistência de dados
+* Usar perfis Spring Boot (`SPRING_PROFILES_ACTIVE`) para diferenciar ambientes
+
